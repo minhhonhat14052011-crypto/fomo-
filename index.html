@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOMO - Học tập làm chủ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --navy:#17324d;
+  --blue:#28516b;
+  --mint:#bcebd7;
+  --green:#4d9b7a;
+  --bg:#f3f7fa;
+  --white:#fff;
+  --text:#263d52;
+  --muted:#77889a;
+  --border:#e4edf2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:'Be Vietnam Pro',Arial,sans-serif;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+header{
+  position:sticky;top:0;z-index:10;background:white;
+  padding:15px 5%;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--border);
+}
+.logo{font-weight:800;color:var(--navy);font-size:20px}
+.logo span{display:block;font-size:9px;letter-spacing:2px;color:var(--muted)}
+nav{display:flex;gap:5px;flex-wrap:wrap}
+nav button{
+  border:0;background:transparent;padding:10px 12px;
+  border-radius:10px;color:#526a7e;font-size:12px;font-weight:700;
+}
+nav button:hover,nav button.active{background:#eaf5ef;color:var(--green)}
+.menu{display:none}
+main{max-width:1150px;margin:auto;padding:35px 22px 65px}
+.hero{
+  background:linear-gradient(120deg,#17324d,#28516b);
+  border-radius:25px;padding:50px;color:white;
+  display:grid;grid-template-columns:1.3fr .7fr;
+  align-items:center;gap:20px;
+}
+.hero h1{font-size:clamp(30px,4vw,48px);line-height:1.2;margin:18px 0}
+.hero p{color:#d6e4ec;line-height:1.8;font-size:14px}
+.tag{
+  display:inline-block;background:#d4f4e5;color:#28634f;
+  padding:8px 14px;border-radius:30px;font-size:11px;font-weight:800;
+}
+.hero .tag{background:#ffffff20;color:#c8f5df}
+.hero-art{font-size:115px;text-align:center}
+.btn{
+  border:0;border-radius:12px;padding:12px 18px;
+  background:var(--mint);color:#173d4d;font-weight:800;
+  font-size:12px;margin-top:10px;
+}
+.btn:hover{filter:brightness(.95)}
+.btn.dark{background:var(--navy);color:white}
+.btn.light{background:#edf3f7;color:var(--navy)}
+.section-title{margin:38px 0 18px}
+.section-title h2{color:var(--navy);margin:0;font-size:23px}
+.section-title p{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card,.panel{
+  background:white;border:1px solid var(--border);
+  border-radius:18px;padding:22px;
+  box-shadow:0 5px 20px #17324d08;
+}
+.card{cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-4px)}
+.card .icon{font-size:30px;margin-bottom:12px}
+.card h3{font-size:15px;color:var(--navy)}
+.card p,.panel p{font-size:12px;line-height:1.8;color:var(--muted)}
+.page-title{margin:10px 0 25px}
+.page-title h1{font-size:30px;color:var(--navy);margin:12px 0}
+.page-title p{font-size:13px;color:var(--muted);line-height:1.8}
+.panel{margin-bottom:16px}
+.panel h2,.panel h3{color:var(--navy);margin-top:0}
+.question{padding:17px 0;border-bottom:1px solid var(--border)}
+.question strong{font-size:13px}
+.options{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.option{
+  padding:9px 12px;border:1px solid var(--border);
+  border-radius:10px;background:white;color:#62778a;font-size:11px;
+}
+.option.selected{background:#e7f5ed;border-color:#69b695;color:#28634f}
+.result{background:#eaf7f0;padding:18px;border-radius:14px;margin-top:15px}
+.field{margin:14px 0}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+.field input,.field textarea{
+  width:100%;padding:12px;border:1px solid var(--border);
+  border-radius:10px;background:#fbfdff;
+}
+.day{
+  display:flex;align-items:center;gap:12px;
+  padding:14px;border:1px solid var(--border);
+  border-radius:12px;margin:9px 0;
+}
+.day input{accent-color:var(--green);width:18px;height:18px}
+.day small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:#f0f7f5;padding:18px;border-radius:14px}
+.stat b{font-size:25px;color:var(--navy);display:block}
+.timer{text-align:center;padding:20px}
+.timer-face{font-size:65px;font-weight:800;color:var(--navy);margin:15px}
+.bar{height:9px;background:#eaf0f2;border-radius:20px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:#69b695}
+.quote{
+  background:#e4f3eb;border-radius:17px;padding:22px;
+  margin-top:20px;color:#285b4b;font-weight:700;
+}
+footer{
+  background:var(--navy);color:white;text-align:center;
+  padding:35px 15px;
+}
+footer p{font-size:12px;color:#c8d8e4}
+footer .creator{color:#bcebd7;font-weight:700;font-size:13px}
+.notice{background:#fff8e8;padding:14px;border-radius:12px;color:#806b3d;font-size:11px;line-height:1.7}
+@media(max-width:850px){
+  header{flex-wrap:wrap}
+  nav{display:none;width:100%;padding-top:12px}
+  nav.open{display:flex}
+  nav button{width:48%;text-align:left}
+  .menu{display:block;border:0;background:#edf3f7;padding:9px;border-radius:9px}
+  .hero{grid-template-columns:1fr;padding:30px}
+  .hero-art{font-size:75px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:550px){
+  main{padding:22px 14px}
+  .grid{grid-template-columns:1fr 1fr;gap:9px}
+  .card{padding:14px}
+  .card h3{font-size:12px}
+  .card p{font-size:10px}
+  .panel{padding:16px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">🧠 FOMO FREE
+    <span>YOUR MIND. YOUR CONTROL.</span>
+  </div>
+
+  <button class="menu" onclick="toggleMenu()">☰</button>
+
+  <nav id="nav">
+    <button onclick="showPage('home')" class="active">Trang chủ</button>
+    <button onclick="showPage('check')">FOMO CHECK</button>
+    <button onclick="showPage('balance')">DIGITAL BALANCE</button>
+    <button onclick="showPage('focus')">STUDY FOCUS</button>
+    <button onclick="showPage('progress')">MY PROGRESS</button>
+    <button onclick="showPage('know')">KNOW ABOUT FOMO</button>
+    <button onclick="showPage('challenge')">CHALLENGE</button>
+  </nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <b>FOMO FREE</b>
+  <p>Đừng để nỗi sợ bỏ lỡ khiến bạn bỏ lỡ chính mình.</p>
+  <p class="creator">Nhà sáng tạo: Hồ Nhật Minh</p>
+  <small>© 2026 FOMO FREE. Học tập làm chủ.</small>
+</footer>
+
+<script>
+const main = document.getElementById("main");
+
+function toggleMenu(){
+  document.getElementById("nav").classList.toggle("open");
+}
+
+function showPage(page){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  const buttons=[...document.querySelectorAll("nav button")];
+  const names=["home","check","balance","focus","progress","know","challenge"];
+  buttons[names.indexOf(page)]?.classList.add("active");
+
+  document.getElementById("nav").classList.remove("open");
+  main.innerHTML=pages[page];
+  window.scrollTo(0,0);
+
+  if(page==="check") renderQuestions();
+  if(page==="balance") renderBalance();
+  if(page==="focus") renderTasks();
+  if(page==="progress") renderProgress();
+  if(page==="challenge") renderChallenge();
+}
+
+function get(key, fallback){
+  try{return JSON.parse(localStorage.getItem("fomo_"+key)) ?? fallback}
+  catch(e){return fallback}
+}
+function save(key,value){
+  localStorage.setItem("fomo_"+key,JSON.stringify(value));
+}
+function notify(message){alert(message)}
+
+const pages={
+
+home:`
+<section class="hero">
+  <div>
+    <span class="tag">HỌC TẬP LÀM CHỦ</span>
+    <h1>Đừng để nỗi sợ bỏ lỡ khiến bạn bỏ lỡ chính mình.</h1>
+    <p>
+      Bạn có đang liên tục kiểm tra điện thoại vì sợ bỏ lỡ
+      những điều bạn bè đang làm? Hãy cùng FOMO FREE tìm hiểu
+      về FOMO và xây dựng thói quen sử dụng mạng xã hội lành mạnh.
+    </p>
+    <button class="btn" onclick="showPage('check')">BẮT ĐẦU KHÁM PHÁ →</button>
+  </div>
+  <div class="hero-art">🌱</div>
+</section>
+
+<div class="section-title">
+  <h2>Khám phá FOMO FREE</h2>
+  <p>Những công cụ nhỏ giúp bạn làm chủ thời gian và sự tập trung.</p>
+</div>
+
+<div class="grid">
+  ${card("🧠","FOMO CHECK","Tự nhìn nhận những biểu hiện FOMO của bản thân.","check")}
+  ${card("📱","DIGITAL BALANCE","Theo dõi và cân bằng thời gian sử dụng thiết bị.","balance")}
+  ${card("📚","STUDY FOCUS","Tập trung học tập với đồng hồ Pomodoro.","focus")}
+  ${card("📈","MY PROGRESS","Theo dõi quá trình thay đổi của bạn.","progress")}
+  ${card("💡","KNOW ABOUT FOMO","Tìm hiểu kiến thức và cách đối mặt với FOMO.","know")}
+  ${card("🏆","FOMO FREE CHALLENGE","Thử thách 7 ngày xây dựng thói quen tích cực.","challenge")}
+</div>
+
+<div class="quote">✨ Bạn không cần biết mọi chuyện đang diễn ra. Bạn chỉ cần sống tốt với hiện tại.</div>
+`,
+
+check:`
+${heading("FOMO CHECK","Bạn có đang gặp FOMO?","Trả lời 5 câu hỏi dưới đây để tự nhìn nhận thói quen của mình.")}
+<div class="panel">
+  <h3>Bài kiểm tra tự suy ngẫm</h3>
+  <p>Chọn câu trả lời phù hợp nhất với bạn.</p>
+  <div id="questions"></div>
+  <button class="btn dark" onclick="scoreCheck()">XEM KẾT QUẢ</button>
+  <div id="checkResult"></div>
+</div>
+<div class="notice">Đây là công cụ tự suy ngẫm mang tính giáo dục, không phải bài kiểm tra tâm lý hay chẩn đoán chuyên môn.</div>
+`,
+
+balance:`
+${heading("DIGITAL BALANCE","Cân bằng cuộc sống số","Theo dõi thời gian sử dụng thiết bị và suy nghĩ về cách bạn sử dụng thời gian.")}
+<div class="panel">
+  <h3>📝 Nhật ký sử dụng thiết bị</h3>
+  <div class="field">
+    <label>Ngày</label>
+    <input type="date" id="balDate">
+  </div>
+  <div class="field">
+    <label>Thời gian sử dụng (phút)</label>
+    <input type="number" id="balMins" min="0" max="1440" placeholder="Ví dụ: 120">
+  </div>
+  <div class="field">
+    <label>Ghi chú</label>
+    <textarea id="balNote" rows="3" placeholder="Hôm nay bạn đã sử dụng điện thoại như thế nào?"></textarea>
+  </div>
+  <button class="btn dark" onclick="addBalance()">LƯU NHẬT KÝ</button>
+</div>
+<div class="panel">
+  <h3>Nhật ký của bạn</h3>
+  <div id="balanceList"></div>
+</div>
+`,
+
+focus:`
+${heading("STUDY FOCUS","Tập trung vào điều quan trọng","Chia thời gian học thành những phiên ngắn để hạn chế xao nhãng.")}
+<div class="panel timer">
+  <div id="timerMode">FOCUS TIME</div>
+  <div class="timer-face" id="timerFace">25:00</div>
+  <div class="bar"><span id="timerBar"></span></div>
+  <button class="btn dark" id="timerStart" onclick="toggleTimer()">BẮT ĐẦU</button>
+  <button class="btn light" onclick="resetTimer()">ĐẶT LẠI</button>
+  <button class="btn light" onclick="setBreak()">NGHỈ 5 PHÚT</button>
+  <p>Gợi ý: Học tập trung 25 phút, sau đó nghỉ ngắn 5 phút.</p>
+</div>
+<div class="panel">
+  <h3>📚 Danh sách việc cần làm</h3>
+  <div class="field">
+    <input id="studyTask" placeholder="Ví dụ: Ôn tập Toán chương 1">
+  </div>
+  <button class="btn dark" onclick="addTask()">THÊM CÔNG VIỆC</button>
+  <div id="taskList"></div>
+</div>
+`,
+
+progress:`
+${heading("MY PROGRESS","Hành trình của bạn","Mỗi thay đổi nhỏ đều đáng được ghi nhận.")}
+<div class="panel">
+  <h3>📊 Tổng quan tiến độ</h3>
+  <div class="stats">
+    <div class="stat"><b id="statSessions">0</b><small>Phiên học hoàn thành</small></div>
+    <div class="stat"><b id="statMinutes">0</b><small>Phút tập trung</small></div>
+    <div class="stat"><b id="statDays">0</b><small>Ngày thử thách</small></div>
+  </div>
+</div>
+<div class="panel">
+  <h3>Thời gian sử dụng thiết bị gần đây</h3>
+  <div id="progressChart"></div>
+</div>
+<div class="quote">🌱 Tiến bộ không phải là thay đổi trong một ngày, mà là kiên trì mỗi ngày.</div>
+`,
+
+know:`
+${heading("KNOW ABOUT FOMO","Hiểu đúng về FOMO","Hiểu rõ vấn đề là bước đầu tiên để thay đổi thói quen.")}
+<div class="grid">
+  <div class="card">
+    <div class="icon">❓</div>
+    <h3>FOMO là gì?</h3>
+    <p>FOMO là viết tắt của Fear of Missing Out, chỉ cảm giác lo lắng rằng mình đang bỏ lỡ những trải nghiệm, thông tin hoặc hoạt động thú vị mà người khác đang có.</p>
+  </div>
+  <div class="card">
+    <div class="icon">📱</div>
+    <h3>FOMO và mạng xã hội</h3>
+    <p>Mạng xã hội khiến chúng ta liên tục nhìn thấy những hoạt động của người khác. Điều này đôi khi tạo cảm giác mình đang bị bỏ lại phía sau.</p>
+  </div>
+  <div class="card">
+    <div class="icon">🧩</div>
+    <h3>Biểu hiện thường gặp</h3>
+    <p>Liên tục kiểm tra thông báo, lo lắng khi không online, so sánh bản thân với người khác hoặc cảm thấy phải tham gia mọi xu hướng.</p>
+  </div>
+  <div class="card">
+    <div class="icon">🌿</div>
+    <h3>Cách cân bằng</h3>
+    <p>Đặt thời gian sử dụng mạng xã hội phù hợp, tắt thông báo không cần thiết và dành thời gian cho các hoạt động ngoài màn hình.</p>
+  </div>
+  <div class="card">
+    <div class="icon">🤝</div>
+    <h3>Kết nối thực tế</h3>
+    <p>Trò chuyện trực tiếp với bạn bè, gia đình và tham gia những hoạt động mình yêu thích.</p>
+  </div>
+  <div class="card">
+    <div class="icon">💚</div>
+    <h3>Trân trọng bản thân</h3>
+    <p>Hãy nhớ rằng những gì xuất hiện trên mạng chỉ là một phần cuộc sống của người khác. Mỗi người có hành trình riêng.</p>
+  </div>
+</div>
+<div class="panel" style="margin-top:18px">
+  <h3>Thử suy ngẫm</h3>
+  <p>Nếu thấy bạn bè đăng ảnh đi chơi mà mình không tham gia, bạn sẽ làm gì để cảm thấy thoải mái hơn?</p>
+  <textarea id="reflection" rows="3" style="width:100%;padding:12px;border:1px solid #e4edf2;border-radius:10px" placeholder="Viết suy nghĩ của bạn..."></textarea>
+  <button class="btn dark" onclick="saveReflection()">LƯU SUY NGẪM</button>
+</div>
+`,
+
+challenge:`
+${heading("FOMO FREE CHALLENGE","Thử thách 7 ngày","Bắt đầu từ những hành động nhỏ để làm chủ sự chú ý của mình.")}
+<div class="panel">
+  <h3>🏆 Hành trình 7 ngày</h3>
+  <div class="bar"><span id="challengeBar"></span></div>
+  <p id="challengeCount">0/7 ngày hoàn thành</p>
+  <div id="challengeList"></div>
+</div>
+<div class="quote">Không cần thay đổi tất cả trong một ngày. Hãy bắt đầu từ một lựa chọn nhỏ.</div>
+`
+};
+
+function card(icon,title,desc,page){
+  return `<div class="card" onclick="showPage('${page}')">
+    <div class="icon">${icon}</div>
+    <h3>${title}</h3><p>${desc}</p>
+    <b style="color:#4d9b7a;font-size:11px">Khám phá →</b>
+  </div>`;
+}
+function heading(tag,title,desc){
+  return `<div class="page-title">
+    <span class="tag">${tag}</span>
+    <h1>${title}</h1><p>${desc}</p>
+  </div>`;
+}
+
+/* FOMO CHECK */
+const questions=[
+"Tôi thường xuyên kiểm tra mạng xã hội vì sợ bỏ lỡ tin tức.",
+"Tôi cảm thấy bồn chồn khi không thể truy cập mạng xã hội.",
+"Tôi thường so sánh hoạt động của mình với những gì bạn bè đăng tải.",
+"Tôi khó tập trung vì muốn kiểm tra thông báo.",
+"Tôi cảm thấy mình phải tham gia mọi xu hướng mà bạn bè nhắc đến."
+];
+function renderQuestions(){
+  let answers=get("answers",[]);
+  document.getElementById("questions").innerHTML=questions.map((q,i)=>`
+    <div class="question">
+      <strong>${i+1}. ${q}</strong>
+      <div class="options">
+        ${["Không bao giờ","Hiếm khi","Thỉnh thoảng","Thường xuyên"].map((v,j)=>`
+          <button class="option ${answers[i]===j?"selected":""}"
+          onclick="answer(${i},${j},this)">${v}</button>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+}
+function answer(i,j,el){
+  let a=get("answers",[]);
+  a[i]=j;save("answers",a);
+  el.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+  el.classList.add("selected");
+}
+function scoreCheck(){
+  let a=get("answers",[]);
+  if(a.length!==5||a.some(x=>x===undefined)){
+    notify("Bạn hãy trả lời đủ 5 câu nhé!");return;
+  }
+  let score=a.reduce((x,y)=>x+y,0);
+  let message=score<=5
+    ?"Bạn ít ghi nhận những biểu hiện được hỏi trong bảng này. Hãy tiếp tục duy trì thói quen số cân bằng."
+    :score<=11
+    ?"Một vài biểu hiện đôi lúc xuất hiện. Bạn có thể quan sát thời điểm mình muốn kiểm tra điện thoại và thử đặt khoảng nghỉ thông báo."
+    :"Nhiều biểu hiện trong bảng xuất hiện khá thường xuyên. Hãy thử điều chỉnh từng thói quen nhỏ và chia sẻ với người bạn tin tưởng nếu điều này làm bạn căng thẳng.";
+  document.getElementById("checkResult").innerHTML=`
+    <div class="result"><b>Kết quả tự suy ngẫm: ${score}/15</b>
+    <p>${message}</p>
+    <small>Đây không phải công cụ chẩn đoán tâm lý.</small></div>`;
+}
+
+/* DIGITAL BALANCE */
+function addBalance(){
+  let date=document.getElementById("balDate").value;
+  let mins=Number(document.getElementById("balMins").value);
+  let note=document.getElementById("balNote").value.trim();
+  if(!date||!Number.isFinite(mins)||mins<0||mins>1440){
+    notify("Hãy kiểm tra ngày và số phút!");return;
+  }
+  let list=get("balance",[]);
+  list.unshift({date,mins,note});
+  save("balance",list.slice(0,30));
+  renderBalance();
+  notify("Đã lưu nhật ký!");
+}
+function renderBalance(){
+  let date=document.getElementById("balDate");
+  if(!date.value)date.value=new Date().toISOString().slice(0,10);
+  let list=get("balance",[]);
+  document.getElementById("balanceList").innerHTML=list.length
+    ?list.map(x=>`<div class="day"><div style="flex:1"><b>${x.date}</b><small>${escapeHTML(x.note||"Không có ghi chú")}</small></div><b>${x.mins} phút</b></div>`).join("")
+    :"<p>Chưa có nhật ký. Hãy thêm bản ghi đầu tiên!</p>";
+}
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+/* STUDY FOCUS */
+let remaining=1500,total=1500,interval=null,mode="focus";
+let sessions=get("sessions",0),minutes=get("minutes",0);
+
+function paintTimer(){
+  let m=Math.floor(remaining/60),s=remaining%60;
+  let face=document.getElementById("timerFace");
+  if(face)face.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  let bar=document.getElementById("timerBar");
+  if(bar)bar.style.width=((total-remaining)/total*100)+"%";
+}
+function toggleTimer(){
+  if(interval){
+    clearInterval(interval);interval=null;
+    document.getElementById("timerStart").textContent="TIẾP TỤC";
+    return;
+  }
+  document.getElementById("timerStart").textContent="TẠM DỪNG";
+  interval=setInterval(()=>{
+    remaining--;paintTimer();
+    if(remaining<=0){
+      clearInterval(interval);interval=null;
+      if(mode==="focus"){
+        sessions++;minutes+=25;
+        save("sessions",sessions);save("minutes",minutes);
+        notify("Hoàn thành một phiên học tập trung!");
+      }else notify("Hết giờ nghỉ!");
+      document.getElementById("timerStart").textContent="BẮT ĐẦU";
+    }
+  },1000);
+}
+function resetTimer(){
+  clearInterval(interval);interval=null;
+  mode="focus";remaining=total=1500;
+  document.getElementById("timerMode").textContent="FOCUS TIME";
+  document.getElementById("timerStart").textContent="BẮT ĐẦU";
+  paintTimer();
+}
+function setBreak(){
+  clearInterval(interval);interval=null;
+  mode="break";remaining=total=300;
+  document.getElementById("timerMode").textContent="BREAK TIME";
+  document.getElementById("timerStart").textContent="BẮT ĐẦU";
+  paintTimer();
+}
+
+/* TASK LIST */
+function addTask(){
+  let input=document.getElementById("studyTask");
+  let value=input.value.trim();
+  if(!value){notify("Hãy nhập công việc trước!");return;}
+  let tasks=get("tasks",[]);
+  tasks.push({value,done:false});
+  save("tasks",tasks);input.value="";
+  renderTasks();
+}
+function renderTasks(){
+  let tasks=get("tasks",[]);
+  document.getElementById("taskList").innerHTML=tasks.length
+    ?tasks.map((t,i)=>`
+      <div class="day">
+        <input type="checkbox" ${t.done?"checked":""}
+          onchange="taskDone(${i},this.checked)">
+        <div style="flex:1">
+          <b style="${t.done?"text-decoration:line-through;color:#999":""}">${escapeHTML(t.value)}</b>
+          <small>${t.done?"Đã hoàn thành":"Đang chờ thực hiện"}</small>
+        </div>
+        <button class="option" onclick="deleteTask(${i})">Xóa</button>
+      </div>`).join("")
+    :"<p>Chưa có công việc nào.</p>";
+}
+function taskDone(i,value){
+  let tasks=get("tasks",[]);
+  tasks[i].done=value;save("tasks",tasks);renderTasks();
+}
+function deleteTask(i){
+  let tasks=get("tasks",[]);
+  tasks.splice(i,1);save("tasks",tasks);renderTasks();
+}
+
+/* MY PROGRESS */
+function renderProgress(){
+  let balance=get("balance",[]);
+  let challenge=get("challenge",Array(7).fill(false));
+  document.getElementById("statSessions").textContent=get("sessions",0);
+  document.getElementById("statMinutes").textContent=get("minutes",0);
+  document.getElementById("statDays").textContent=challenge.filter(Boolean).length;
+
+  let recent=balance.slice(0,7).reverse();
+  let max=Math.max(60,...recent.map(x=>x.mins));
+  document.getElementById("progressChart").innerHTML=recent.length
+    ?`<div style="display:flex;align-items:end;gap:12px;height:150px;border-bottom:1px solid #ddd;padding:10px">
+      ${recent.map(x=>`
+        <div style="flex:1;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px">
+          <div style="background:#69b695;width:65%;max-width:40px;height:${Math.max(4,x.mins/max*110)}px;border-radius:7px 7px 0 0"></div>
+          <small style="font-size:9px">${x.date.slice(5)}</small>
+        </div>`).join("")}
+      </div>`
+    :"<p>Hãy thêm nhật ký trong DIGITAL BALANCE để xem biểu đồ.</p>";
+}
+
+/* 7-DAY CHALLENGE */
+const challenges=[
+  ["Ngày 1","Quan sát","Chú ý những lúc bạn muốn mở mạng xã hội."],
+  ["Ngày 2","Tạo khoảng nghỉ","Dành một khoảng thời gian không kiểm tra thông báo."],
+  ["Ngày 3","Tắt thông báo","Tắt những thông báo không cần thiết."],
+  ["Ngày 4","Tập trung học tập","Thử một phiên học Pomodoro."],
+  ["Ngày 5","Kết nối thực tế","Trò chuyện hoặc vận động ngoài màn hình."],
+  ["Ngày 6","Bớt so sánh","Nhớ rằng mạng xã hội chỉ thể hiện một phần cuộc sống."],
+  ["Ngày 7","Nhìn lại","Ghi nhận điều tích cực bạn muốn duy trì."]
+];
+function renderChallenge(){
+  let a=get("challenge",Array(7).fill(false));
+  let count=a.filter(Boolean).length;
+  document.getElementById("challengeBar").style.width=(count/7*100)+"%";
+  document.getElementById("challengeCount").textContent=count+"/7 ngày hoàn thành";
+  document.getElementById("challengeList").innerHTML=challenges.map((d,i)=>`
+    <label class="day">
+      <input type="checkbox" ${a[i]?"checked":""}
+        onchange="challengeDone(${i},this.checked)">
+      <div><b>${d[0]} · ${d[1]}</b><small>${d[2]}</small></div>
+    </label>`).join("");
+}
+function challengeDone(i,value){
+  let a=get("challenge",Array(7).fill(false));
+  a[i]=value;save("challenge",a);renderChallenge();
+}
+
+/* SAVE REFLECTION */
+function saveReflection(){
+  let value=document.getElementById("reflection").value.trim();
+  if(!value){notify("Bạn hãy viết suy nghĩ trước nhé!");return;}
+  save("reflection",value);
+  notify("Đã lưu suy ngẫm trên thiết bị!");
+}
+
+showPage("home");
+</script>
+</body>
+</html>
