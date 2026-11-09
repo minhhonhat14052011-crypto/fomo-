@@ -173,6 +173,7 @@ footer .creator{color:#bcebd7;font-weight:700;font-size:13px}
 
 <script>
 const main = document.getElementById("main");
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVXdXYfnCRO1ZL-D4N19RXqvCoTBqyAK8cwxwg-fPB7KhB-OYs5d7bHJcHXPKl4yv7Og/exec";
 
 function toggleMenu(){
   document.getElementById("nav").classList.toggle("open");
@@ -239,7 +240,7 @@ home:`
 `,
 
 check:`
-${heading("FOMO CHECK","Bạn có đang gặp FOMO?","Trả lời 5 câu hỏi dưới đây để tự nhìn nhận thói quen của mình.")}
+${heading("FOMO CHECK","Bạn có đang gặp FOMO?","Trả lời 10 câu hỏi dưới đây để tự nhìn nhận thói quen của mình.")}
 <div class="panel">
   <h3>Bài kiểm tra tự suy ngẫm</h3>
   <p>Chọn câu trả lời phù hợp nhất với bạn.</p>
@@ -381,49 +382,134 @@ function heading(tag,title,desc){
 }
 
 /* FOMO CHECK */
-const questions=[
-"Tôi thường xuyên kiểm tra mạng xã hội vì sợ bỏ lỡ tin tức.",
-"Tôi cảm thấy bồn chồn khi không thể truy cập mạng xã hội.",
-"Tôi thường so sánh hoạt động của mình với những gì bạn bè đăng tải.",
-"Tôi khó tập trung vì muốn kiểm tra thông báo.",
-"Tôi cảm thấy mình phải tham gia mọi xu hướng mà bạn bè nhắc đến."
+
+/* FOMO CHECK - 10 CAU HOI */
+
+const questions = [
+    "Tôi thường xuyên kiểm tra mạng xã hội vì sợ bỏ lỡ tin tức.",
+    "Tôi cảm thấy bồn chồn khi không thể truy cập mạng xã hội.",
+    "Tôi thường so sánh bản thân với những gì bạn bè đăng tải.",
+    "Tôi khó tập trung học tập vì muốn kiểm tra thông báo.",
+    "Tôi cảm thấy mình phải tham gia mọi xu hướng.",
+    "Tôi lo lắng khi thấy bạn bè có những trải nghiệm mà mình không có.",
+    "Tôi thường xuyên mở điện thoại dù không có thông báo mới.",
+    "Tôi cảm thấy khó chịu khi không biết bạn bè đang làm gì.",
+    "Tôi dành nhiều thời gian theo dõi cuộc sống của người khác trên mạng.",
+    "Tôi cảm thấy mình đang bỏ lỡ điều gì đó khi không sử dụng mạng xã hội."
 ];
-function renderQuestions(){
-  let answers=get("answers",[]);
-  document.getElementById("questions").innerHTML=questions.map((q,i)=>`
-    <div class="question">
-      <strong>${i+1}. ${q}</strong>
-      <div class="options">
-        ${["Không bao giờ","Hiếm khi","Thỉnh thoảng","Thường xuyên"].map((v,j)=>`
-          <button class="option ${answers[i]===j?"selected":""}"
-          onclick="answer(${i},${j},this)">${v}</button>
-        `).join("")}
-      </div>
-    </div>
-  `).join("");
+
+const options = [
+    "Không bao giờ",
+    "Hiếm khi",
+    "Thỉnh thoảng",
+    "Thường xuyên",
+    "Luôn luôn"
+];
+
+function renderQuestions() {
+    let answers = get("answers", []);
+
+    document.getElementById("questions").innerHTML =
+        questions.map((q, i) => `
+            <div class="question">
+                <strong>${i + 1}. ${q}</strong>
+                <div class="options">
+                    ${options.map((v, j) => `
+                        <button class="option ${
+                            answers[i] === j + 1 ? "selected" : ""
+                        }"
+                        onclick="answer(${i},${j + 1},this)">
+                            ${v}
+                        </button>
+                    `).join("")}
+                </div>
+            </div>
+        `).join("");
 }
-function answer(i,j,el){
-  let a=get("answers",[]);
-  a[i]=j;save("answers",a);
-  el.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
-  el.classList.add("selected");
+
+function answer(i, j, el) {
+    let a = get("answers", []);
+
+    a[i] = j;
+    save("answers", a);
+
+    el.parentElement.querySelectorAll("button")
+        .forEach(b => b.classList.remove("selected"));
+
+    el.classList.add("selected");
 }
-function scoreCheck(){
-  let a=get("answers",[]);
-  if(a.length!==5||a.some(x=>x===undefined)){
-    notify("Bạn hãy trả lời đủ 5 câu nhé!");return;
-  }
-  let score=a.reduce((x,y)=>x+y,0);
-  let message=score<=5
-    ?"Bạn ít ghi nhận những biểu hiện được hỏi trong bảng này. Hãy tiếp tục duy trì thói quen số cân bằng."
-    :score<=11
-    ?"Một vài biểu hiện đôi lúc xuất hiện. Bạn có thể quan sát thời điểm mình muốn kiểm tra điện thoại và thử đặt khoảng nghỉ thông báo."
-    :"Nhiều biểu hiện trong bảng xuất hiện khá thường xuyên. Hãy thử điều chỉnh từng thói quen nhỏ và chia sẻ với người bạn tin tưởng nếu điều này làm bạn căng thẳng.";
-  document.getElementById("checkResult").innerHTML=`
-    <div class="result"><b>Kết quả tự suy ngẫm: ${score}/15</b>
-    <p>${message}</p>
-    <small>Đây không phải công cụ chẩn đoán tâm lý.</small></div>`;
+
+/* GUI DU LIEU LEN GOOGLE SHEETS */
+
+async function sendToGoogleSheets(data) {
+    await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+    });
 }
+
+/* CHAM DIEM */
+
+async function scoreCheck() {
+    let a = get("answers", []);
+
+    if (a.length !== 10 || a.some(x =>
+        !Number.isInteger(x) || x < 1 || x > 5
+    )) {
+        notify("Bạn hãy trả lời đủ 10 câu nhé!");
+        return;
+    }
+
+    let score = a.reduce((x, y) => x + y, 0);
+
+    let level, message;
+
+    if (score <= 20) {
+        level = "Thấp";
+        message = "Bạn ít ghi nhận những biểu hiện FOMO trong bảng tự đánh giá. Hãy tiếp tục duy trì thói quen số cân bằng.";
+    } else if (score <= 30) {
+        level = "Nhẹ";
+        message = "Một vài biểu hiện FOMO có thể xuất hiện. Hãy chú ý hơn đến thời gian sử dụng mạng xã hội.";
+    } else if (score <= 40) {
+        level = "Trung bình";
+        message = "Bạn ghi nhận khá nhiều biểu hiện FOMO. Hãy thử điều chỉnh thói quen sử dụng thiết bị và tập trung vào cuộc sống thực tế.";
+    } else {
+        level = "Cao";
+        message = "Bạn ghi nhận nhiều biểu hiện FOMO trong bảng tự đánh giá. Hãy cân bằng thời gian online và chia sẻ với người bạn tin tưởng nếu cảm thấy căng thẳng.";
+    }
+
+    document.getElementById("checkResult").innerHTML = `
+        <div class="result">
+            <h3>KẾT QUẢ FOMO CHECK</h3>
+            <h2>${score}/50 điểm</h2>
+            <p><b>Mức độ: ${level}</b></p>
+            <p>${message}</p>
+            <small>Đây là công cụ tự suy ngẫm mang tính giáo dục, không phải công cụ chẩn đoán tâm lý.</small>
+            <br><br>
+            <button class="btn light" onclick="showPage('check')">
+                LÀM LẠI
+            </button>
+        </div>
+    `;
+
+    try {
+        await sendToGoogleSheets({
+            score: score,
+            level: level,
+            answers: a,
+            submittedAt: new Date().toISOString()
+        });
+
+        console.log("Đã gửi yêu cầu lưu kết quả.");
+    } catch (error) {
+        console.error("Lỗi gửi dữ liệu:", error);
+    }
+}
+
 
 /* DIGITAL BALANCE */
 function addBalance(){
